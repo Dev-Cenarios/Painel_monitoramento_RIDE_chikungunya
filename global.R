@@ -225,6 +225,20 @@ MALHA_RIDE <- local({
 message(sprintf("[Chik RIDE] Malha: %d de %d municípios.",
                 length(MALHA_RIDE$features), nrow(GEO_DICT)))
 
+# Contorno das UFs e da RIDE (gerado por prep/gerar_contorno.R), juntado ao
+# FIM da malha do mapa: as feicoes extras sao desenhadas por ultimo, por cima
+# dos municipios, e por serem parte do mesmo mapa acompanham zoom e arraste.
+# Opcional: sem o arquivo, o mapa sai so com as bordas cinza dos municipios.
+CONTORNO_RIDE <- local({
+  arq <- file.path(GEO_DIR, "contorno_ride.geojson")
+  if (!file.exists(arq)) return(list())
+  Filter(function(f) is.character(f$properties$codarea),
+         jsonlite::fromJSON(arq, simplifyVector = FALSE)$features)
+})
+CODIGOS_CONTORNO <- vapply(CONTORNO_RIDE, function(f) f$properties$codarea, "")
+MALHA_MAPA <- list(type = "FeatureCollection",
+                   features = c(MALHA_RIDE$features, CONTORNO_RIDE))
+
 # ------------------------------------------------------------------ nowcast --
 # O SINAN traz a data de digitacao de cada ficha, entao o atraso de
 # notificacao e observavel. Metodo: "chain ladder" empirico, igual ao do
