@@ -26,6 +26,8 @@ function(input, output, session) {
 
   mod_serie_server("serie", geo, classe, serie)
   mod_rt_server("rt", geo)
+  # Quadrantes: todos os municipios (o recorte so destaca o selecionado).
+  mod_mapa_rt_server("tendencia", geo, shiny::reactive(classes_do_filtro(classe())))
   mod_canal_server("canal", serie)
   mod_heatmap_server("heatmap", serie)
   mod_perfil_server("perfil", geo, classe)

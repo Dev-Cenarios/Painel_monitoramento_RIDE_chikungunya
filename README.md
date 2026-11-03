@@ -18,6 +18,7 @@ chik_ride/
 │   ├── mod_mapa.R       # incidência por município (clique = foco)
 │   ├── mod_serie.R      # casos semanais empilhados por classificação + nowcast
 │   ├── mod_rt.R         # Rt do InfoDengue (como no dengue_ride)
+│   ├── mod_mapa_rt.R    # Rt — Tendência por município (quadrantes), como no dengue_ride
 │   ├── mod_canal.R      # canal endêmico (ano sanitário, como a dengue)
 │   ├── mod_heatmap.R    # sazonalidade ano x SE
 │   ├── mod_perfil.R     # faixa etária x sexo; hospitalização/fase crônica
@@ -58,6 +59,7 @@ RPostgres para o ETL).
 | Canal endêmico | **Ano sanitário** (SE 27→26), como o dengue_ride. Referência padrão: temporadas completas, exceto 2021/22 e 2022/23 (epidemia em Goiás). Abre na temporada anterior durante as primeiras 20 semanas da nova (entressafra). |
 | Nowcast | Chain ladder empírico sobre `DT_DIGITA` (3 anos de semanas maduras). Corrige as semanas 1 a 8 anteriores ao arquivo; a semana corrente (F(0) ≈ 16%) fica sem estimativa, porque com poucas notificações a divisão explode. |
 | Rt | `rt` do InfoDengue (`"Info_Dengue".chikungunya`), por município, como no dengue_ride. No estado e na RIDE, média ponderada pelos casos (aproximação) + nº de municípios com Rt > 1. |
+| Rt — Tendência (quadrantes) | Não é o Rt: X = casos da janela atual ÷ mediana da mesma janela nos anos anteriores (deslocada 52, 104… semanas); Y = janela atual ÷ janela anterior. Cor = quadrante, forma = incidência acumulada no ano. Todos os municípios sempre; o recorte só destaca o selecionado. Segue o filtro "Casos"; janela padrão 8 sem. (até 26). Semana corrente fora e recentes corrigidas pelo nowcast. |
 | Gravidade | Hospitalização (`HOSPITALIZ`), fase crônica (`CLINC_CHIK` = 2) e óbito (`EVOLUCAO` = 2). Óbito é raro demais para virar taxa. |
 | População | Estimativa anual do IBGE em `"Info_Dengue".dengue`; anos sem notificação no município herdam o ano vizinho. |
 

@@ -6,7 +6,7 @@
 #   1. filtros (recorte geografico + classificacao dos casos)
 #   2. KPIs
 #   3. mapa (5) | evolucao semanal por classificacao (7)
-#   4. Rt do InfoDengue (largura total)
+#   4. Rt do InfoDengue (7) | tendencia por municipio - quadrantes (5)
 #   5. canal endemico (7) | sazonalidade (5)
 #   6. perfil (sexo x idade) e gravidade
 # Aba "Análises": ranking de municipios, classificacao por ano, achados.
@@ -59,9 +59,16 @@ bslib::page_navbar(
                      rodape = "Semana de início dos sintomas. Linha tracejada: estimativa corrigida pelo atraso de digitação (nowcast) e faixa de incerteza.")
     ),
 
-    cartao_grafico("Rt (InfoDengue) — número de reprodução efetivo", mod_rt_saida("rt", "320px"),
-                   mod_rt_controles("rt"),
-                   rodape = "Acima de 1 (linha tracejada), cada caso gera mais de um caso novo: transmissão em expansão. No estado e na RIDE, média dos municípios ponderada pelos casos."),
+    bslib::layout_columns(
+      col_widths = c(7, 5),
+      cartao_grafico("Rt (InfoDengue) — número de reprodução efetivo", mod_rt_saida("rt", "440px"),
+                     mod_rt_controles("rt"),
+                     rodape = "Acima de 1 (linha tracejada), cada caso gera mais de um caso novo: transmissão em expansão. No estado e na RIDE, média dos municípios ponderada pelos casos."),
+      # Nao e o Rt real: nome mantido igual ao do dengue_ride (ver R/mod_mapa_rt.R).
+      cartao_grafico("Rt — Tendência por município (quadrantes)",
+                     mod_mapa_rt_saida("tendencia", "440px"), mod_mapa_rt_controles("tendencia"),
+                     rodape = "Não é o Rt: compara cada município com ele mesmo em anos anteriores (X) e com a janela anterior (Y). Segue o filtro \"Casos\"; o recorte só destaca o município. Semana corrente fora; recentes corrigidas pelo nowcast.")
+    ),
 
     bslib::layout_columns(
       col_widths = c(7, 5),
